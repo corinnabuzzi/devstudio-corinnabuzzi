@@ -17,42 +17,10 @@ Progetto realizzato come esame finale del corso Git & GitHub.
 ## Informazioni dal repository
 
 1. Numero totale di commit su main (edit: master): 24
-2. Hash breve del primo commit in assoluto: 9cf03e9 
+2. Hash breve del primo commit in assoluto: **9cf03e9** 
 3. Numero di Pull Request aperte durante il progetto: 4
 
-## Commenti commit
-
-
-
-11. **55a5320** feat: aggiunta pagina 404
-
-12. **c11f441** Merge pull request #4 from corinnabuzzi/feature/404
-
-13. **bd10ece** feat: aggiornamento colore header variante A
-
-14. **fc700c4** feat: aggiornamento colore header variante B
-
-15. **27fd50a** fix: risolto conflitto colore header, scelta variante A
-
-16. **045c083** fix: aggiornamento titolo pagina servizi
-
-17. **e81f27a** feat: aggiunto file tipografia
-
-18. **01cba62** feat:stili creativi homepage
-
-19. **67160a8** Revert "feat:stili creativi homepage"
-
-20. **460aa49** feat: struttura pagina chi siamo
-
-21. **672a285** feat:stili pagina chi siamo
-
-22. **280ee67** feat: aggiunto link chi siamo alla navigazione
-
-23. **0c2cbbf** feat: aggiunta sezione chi siamo
-
-24. **b792c76** (HEAD -> master, origin/master, origin/HEAD) Merge branch 'feature/ch
-i-siamo'
-
+## Analisi e commenti
 ### Inizializzazione 
 Creazione directory locale e inizializzazione locale della repository git:
 ```bash
@@ -70,13 +38,15 @@ nano .gitignore
 Creazione e scrittura primi file del sito, `index.html` e `styles.css`.
 
 Commit:
-**9cf03e9** - chore: aggiunto .gitignore
-**7e0298a** - feat:aggiunta homepage
-**2d6ecef** - feat:aggiunto foglio di stile
+
+    9cf03e9 - chore: aggiunto .gitignore
+    7e0298a - feat: aggiunta homepage
+    2d6ecef - feat: aggiunto foglio di stile
 
 Note:
-commit "chore": gestione del progetto;
-commit "feat": aggiunta feature al prodotto.
+
+    commit "chore": gestione del progetto
+    commit "feat": aggiunta feature al prodotto
 
 commit diretti su `master`, unica branch esistente.
 
@@ -92,12 +62,13 @@ per creare la branch e spostarcisi in un singolo comando.
 
 Creazione di `servizi.html`, aggiornamento stili css, push della branch sul remote e collegamento upstream:
 ```bash
-git push -u origin feature/servizi`
+git push -u origin feature/servizi
 ```
 
 Apertura pull request da github e merge commit per unire storia di `main` e `feature/servizi`.
 
 **e0876e3** Merge pull request #1 from corinnabuzzi/feature/servizi
+
 **b05101f** feat: aggiunta pagina servizi
 
 #### Team
@@ -162,8 +133,134 @@ Nuovo file html da branch principale `master`, ma doveva essere da branch specif
 `git reset --soft HEAD~1` per annullare il commit.
 creazione branch dedicata (`feature/404`), stage e commit, push e PR da github.
 
+
 ### Cronologia
+gestione dei conflitti, `rebase`, `revert` e `squash`.
+
+create due branch parallele a partire dallo stesso commit, `feature/colori-a` e `feature/colori-b`. entrambe modificano la stessa proprietà nello stesso punto e Git non può determinare automaticamente quale versione mantenere
+
+**bd10ece** — feat: aggiornamento colore header variante A  
+**fc700c4** — feat: aggiornamento colore header variante B  
+**27fd50a** — fix: risolto conflitto colore header, scelta variante A  
 
 
+quidni si genera un conflitto:
+CONFLICT (content): Merge conflict in style.css
 
-`
+il conflitto viene risolto manualmente, scegliendo la variante A, rimozione dei marker, staging e committing.
+
+#### Rebase
+Creazione branch `feature/tipografia` con file css.
+staging e committing, ma non pushing.
+
+Spostamento in `master` e modifica files html, staging committing e pushing.
+
+Spostamento in `feature/tipografia`, riallineamento con master branch tramite rebase; il commit della feature viene riscritto sopra l’ultimo commit di main:
+
+```bash
+git rebase master
+```
+
+**01cba62** feat:stili creativi homepage
+**67160a8** Revert "feat:stili creativi homepage"
+
+
+#### Revert 
+annullare un commit già pubblicato
+
+da `master`, editare styles.css, staging comitting e pushing
+
+**01cba62** — feat: stili creativi homepage
+**67160a8** — Revert "feat: stili creativi homepage"
+Processo
+
+Il commit è sbagliato ed è già sul remote. 
+
+revert meglio di reset perché il commit è già sul remote e riscrivere la storia creerebbe inconsistenze
+
+```bash
+git revert HEAD
+```
+
+#### Merge squash 
+\[commit su `feature/chi-siamo`]
+**460aa49** — feat: struttura pagina chi siamo
+**672a285** — feat: stili pagina chi siamo
+**280ee67** — feat: aggiunto link chi siamo alla navigazione
+
+\[commit su `master`]
+**0c2cbbf** — feat: aggiunta sezione chi siamo
+
+```bash
+git log --oneline
+```
+per controllare presenza di 3 commit; poi
+```bash
+git merge --squash feature/chi-siamo
+git commit -m "feat: aggiunta sezione chi siamo"
+```
+
+### Pulizia
+```bash
+git rev-list --count master
+```
+output: 25 commits
+
+eliminare branch:
+```bash
+# se locale
+git branch -d feature/colori-b
+
+# se remota
+git push origin --delete feature/team
+
+```
+
+### Tutte le commit
+9cf03e9 chore: aggiunto .gitignore
+
+7e0298a feat: aggiunta homepage
+
+2d6ecef feat:aggiunto foglio di stile
+
+b05101f feat:aggiunta pagina servizi
+
+e0876e3 Merge pull request #1 from corinnabuzzi/feature/servizi
+
+472a7b5 fix:aggiornamento testi homepage
+
+2e81bd0 feat: aggiunta pagina team con stili
+
+93451a3 Merge pull request #2 from corinnabuzzi/feature/team
+
+a47c0e4 feat: aggiunta pagina contatti con stili
+
+77ea189 Merge pull request #3 from corinnabuzzi/feature/contatti
+
+55a5320 feat: aggiunta pagina 404
+
+c11f441 Merge pull request #4 from corinnabuzzi/feature/404
+
+bd10ece feat: aggiornamento colore header variante A
+
+fc700c4 feat: aggiornamento colore header variante B
+
+27fd50a fix: risolto conflitto colore header, scelta variante A
+
+045c083 fix: aggiornamento titolo pagina servizi
+
+e81f27a feat: aggiunto file tipografia
+
+01cba62 feat:stili creativi homepage
+
+67160a8 Revert "feat:stili creativi homepage"
+
+460aa49 feat: struttura pagina chi siamo
+
+672a285 feat:stili pagina chi siamo
+
+280ee67 feat: aggiunto link chi siamo alla navigazione
+
+0c2cbbf feat: aggiunta sezione chi siamo
+
+b792c76 (HEAD -> master, origin/master, origin/HEAD) Merge branch 'feature/chi-siamo'
